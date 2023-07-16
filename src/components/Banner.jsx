@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const Heading = styled.header`
-  background-image: url("./assets/suggestions/desktop/background-header.png");
+  background-image: url("assets/suggestions/desktop/background-header.png");
   background-repeat: no-repeat;
   background-size: cover;
 
