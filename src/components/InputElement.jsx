@@ -82,6 +82,7 @@ function InputElement({
         className={definedClassname}
         ref={inputRef}
         $login={login}
+        readOnly={login}
       />
     );
   }

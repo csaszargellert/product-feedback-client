@@ -19,6 +19,8 @@ function Feedbacks({ feedbacks }) {
             detail={feedback.detail}
             category={feedback.category}
             id={feedback.id}
+            upvotesNumber={feedback.upvotes.length}
+            commentsNumber={feedback.comments.length}
           />
         );
       })}

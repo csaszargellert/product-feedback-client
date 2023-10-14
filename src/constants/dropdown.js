@@ -24,9 +24,19 @@ export const CATEGORIES = [
 ];
 
 export const STATUSES = [
-  { id: 1, category: "Planned", color: "orange" },
-  { id: 2, category: "In-Progress", color: "violet" },
-  { id: 3, category: "Live", color: "sky-blue" },
+  {
+    id: 1,
+    category: "Planned",
+    color: "orange",
+    text: "Ideas prioritized for research",
+  },
+  {
+    id: 2,
+    category: "In-Progress",
+    color: "violet",
+    text: "Currently being developed",
+  },
+  { id: 3, category: "Live", color: "sky-blue", text: "Released features" },
 ];
 
 export const SORT = [

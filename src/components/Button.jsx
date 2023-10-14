@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 
 const ButtonEl = styled.button.attrs((props) => ({
-  type: props.$type || "button",
+  type: props.$type,
 }))`
   border: none;
   outline: none;

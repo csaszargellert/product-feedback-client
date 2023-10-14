@@ -1,12 +1,12 @@
-import { Link, useSubmit } from "react-router-dom";
+import { Link, useSearchParams, useLocation } from "react-router-dom";
 import styled from "styled-components";
+import { useEffect } from "react";
 
+import { useSortContext } from "../context/sortContext";
 import Button from "./Button";
 import Suggestion from "./Suggestion";
 import DropdownElement from "./DropdownElement";
-
 import { SORT } from "../constants/dropdown";
-import useDropdown from "../custom-hooks/useDropdown";
 
 const Header = styled.section`
   padding: 1.4rem 1.6rem 1.4rem 2.4rem;
@@ -20,7 +20,18 @@ const Header = styled.section`
 `;
 
 function SortHeader({ suggestions }) {
-  const [sortValue, setSortValue] = useDropdown(SORT[0].category);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+  const { sort, handleSort } = useSortContext();
+  const search = new URLSearchParams(location.search);
+  const sortInUrl = search.get("sort");
+
+  useEffect(() => {
+    if (sort && sort !== sortInUrl) {
+      searchParams.set("sort", sort);
+      setSearchParams(searchParams);
+    }
+  }, [sort]);
 
   return (
     <Header>
@@ -29,8 +40,8 @@ function SortHeader({ suggestions }) {
       </Suggestion>
       <DropdownElement
         list={SORT}
-        categoryValue={sortValue}
-        onHandleCategory={setSortValue}
+        categoryValue={sort || SORT[0].category}
+        onHandleCategory={handleSort}
         parent="sort"
         type="button"
       >

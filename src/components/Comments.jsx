@@ -17,7 +17,7 @@ const CommentContainer = styled.section`
   }
 `;
 
-function Comments({ comments }) {
+function Comments({ comments, feedbackId }) {
   return (
     <CommentContainer>
       <h3>
@@ -25,9 +25,15 @@ function Comments({ comments }) {
       </h3>
 
       <article>
-        {comments.length &&
+        {comments.length > 0 &&
           comments.map((comment) => {
-            return <Comment key={comment.id} comment={comment} />;
+            return (
+              <Comment
+                key={comment.id}
+                comment={comment}
+                feedbackId={feedbackId}
+              />
+            );
           })}
       </article>
     </CommentContainer>

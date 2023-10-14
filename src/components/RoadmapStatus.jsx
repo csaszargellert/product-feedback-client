@@ -25,13 +25,13 @@ const RoadmapColumn = styled.section`
   }
 `;
 
-function RoadmapStatus({ color, appearance, data, status }) {
+function RoadmapStatus({ color, appearance, data, status, text }) {
   return (
     <RoadmapColumn>
       <h3>
         {status} ({appearance})
       </h3>
-      <p>Ideas prioritized for research</p>
+      <p>{text}</p>
       <div>
         {data.length
           ? data.map((feedback) => {

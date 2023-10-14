@@ -27,6 +27,7 @@ function RoadmapMain({ feedbacks, statuses }) {
             key={status.id}
             color={status.color}
             status={status.category}
+            text={status.text}
             data={getRightFeedbacks(status.category)} // array
             appearance={getAppearanceFeedbacks(status.category)} // number
           />

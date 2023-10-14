@@ -1,12 +1,15 @@
 import styled from "styled-components";
 import { useState } from "react";
+import { useSubmit } from "react-router-dom";
 
 import Button from "./Button";
 import { detailValidator } from "../constants/validator";
 import useInput from "../custom-hooks/useInput";
 import InputElement from "./InputElement";
+import Replies from "./Replies";
+import { ErrorMessage } from "./Input";
 
-const ReplyButton = styled.button`
+export const ReplyButton = styled.button`
   border: none;
   outline: none;
   background: none;
@@ -26,7 +29,7 @@ const ReplyButton = styled.button`
   }
 `;
 
-const Header = styled.div`
+export const Header = styled.header`
   display: flex;
   align-items: center;
   gap: var(--gap);
@@ -76,8 +79,12 @@ const CommentEl = styled.div`
     border-bottom: 1px solid var(--light-grey);
   }
 
-  p {
+  p,
+  > div {
     padding-left: var(--padding-left);
+  }
+
+  p:not(${ErrorMessage}) {
     color: var(--dark-grey);
     font-size: 1.5rem;
   }
@@ -86,16 +93,17 @@ const CommentEl = styled.div`
     margin-bottom: 2.4rem;
   }
 
-  div:last-child {
-    padding-left: var(--padding-left);
+  form {
     display: grid;
     grid-template-columns: 11fr 3fr;
     align-items: start;
     gap: 1.6rem;
+    padding-left: var(--padding-left);
   }
 `;
 
-function Comment({ comment }) {
+function Comment({ comment, feedbackId }) {
+  const submit = useSubmit();
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [replyValue, replyError, replyIsTouched, replyHandleInput] =
     useInput(detailValidator);
@@ -104,35 +112,59 @@ function Comment({ comment }) {
     setShowReplyInput((prev) => !prev);
   };
 
+  const handleSubmit = function (e) {
+    e.preventDefault();
+
+    const obj = {
+      reply: replyValue,
+      replyToWhom: comment.user.username,
+      commentId: comment.id,
+      type: "reply",
+    };
+
+    submit(obj, { method: "POST" });
+  };
+
   return (
     <CommentEl>
       <Header>
         <div>
-          <img src="/assets/user-images/image-anne.jpg" alt="user image" />
+          <img
+            src={`/assets/user-images/image-${comment.user.photo}`}
+            alt={comment.user.name}
+          />
         </div>
         <div>
-          <h5>Anne Valentine</h5>
-          <span>@annev1990</span>
+          <h5>{comment.user.name}</h5>
+          <span>@{comment.user.username}</span>
         </div>
         <ReplyButton onClick={handleReply}>reply</ReplyButton>
       </Header>
       <p>{comment.content}</p>
+      <Replies
+        replies={comment.replies}
+        feedbackId={feedbackId}
+        commentId={comment.id}
+      />
       {showReplyInput && (
-        <div>
-          <InputElement
-            name="reply"
-            type="textarea"
-            id="reply"
-            value={replyValue}
-            handleChange={replyHandleInput}
-            error=""
-            isTouched={replyIsTouched}
-            definedClassname="height-m"
-          />
-          <Button bg="violet" hover="#C75AF6">
-            post reply
-          </Button>
-        </div>
+        <>
+          <form onSubmit={handleSubmit}>
+            <InputElement
+              name="reply"
+              type="textarea"
+              id="reply"
+              value={replyValue}
+              handleChange={replyHandleInput}
+              error=""
+              isTouched={replyIsTouched}
+              definedClassname="height-m"
+            />
+            <Button bg="violet" hover="#C75AF6" type="submit">
+              post reply
+            </Button>
+          </form>
+          {replyError && <ErrorMessage>{replyError}</ErrorMessage>}
+        </>
       )}
     </CommentEl>
   );

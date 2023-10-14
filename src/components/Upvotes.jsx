@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+import { useFetcher, useRouteLoaderData, useLocation } from "react-router-dom";
 
 const UpvoteEl = styled.div`
   display: flex;
@@ -65,9 +66,32 @@ const UpvoteEl = styled.div`
   }}
 `;
 
-function Upvotes({ children, definedClass }) {
+function Upvotes({ children, definedClass, feedbackId }) {
+  const { userIsAuthenticated, userId } = useRouteLoaderData("root");
+  const upvotes = useRouteLoaderData("upvotes-loader");
+  const location = useLocation();
+  const fetcher = useFetcher();
+  const feedbackIsLiked = !userIsAuthenticated
+    ? false
+    : !!upvotes?.find(
+        (upvote) => upvote.user === userId && upvote.feedback === feedbackId
+      );
+
+  const handleClick = function () {
+    const searchParams = new URLSearchParams();
+    searchParams.set("from", location.pathname);
+    fetcher.submit(null, {
+      method: "POST",
+      action: `/upvotes/${feedbackId}?${searchParams.toString()}`,
+    });
+  };
+
   return (
-    <UpvoteEl className={definedClass}>
+    <UpvoteEl
+      className={definedClass}
+      onClick={handleClick}
+      $active={feedbackIsLiked}
+    >
       <svg width="10" height="7" xmlns="http://www.w3.org/2000/svg">
         <path
           d="M1 6l4-4 4 4"

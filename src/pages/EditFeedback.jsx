@@ -1,59 +1,82 @@
 import {
   useLoaderData,
-  useSubmit,
   useNavigate,
-  useNavigation,
+  json,
+  useSubmit,
+  useFetcher,
 } from "react-router-dom";
-import axiosDef from "../utils/axios";
+import styled from "styled-components";
 
-import Spinner from "../components/Spinner";
+import { axiosPrivate } from "../utils/axios";
 import { titleValidator, detailValidator } from "../constants/validator";
 import { CATEGORIES, STATUSES } from "../constants/dropdown";
 import useInput from "../custom-hooks/useInput";
 import useDropdown from "../custom-hooks/useDropdown";
-// import { onDeletionConfirmation } from "../components/ErrorModal";
 
 import Dropdown from "../components/Dropdown";
 import Input from "../components/Input";
 import Button, { BackButton } from "../components/Button";
 
-import { Section, ButtonController } from "./AddFeedback";
+const Section = styled.section`
+  padding: 9.6rem 0;
+  max-width: 54rem;
+  margin: 0 auto;
 
-export const loader = async function (props) {
-  const { feedbackId } = props.params;
-
-  try {
-    const data = await axiosDef({
-      url: "/feedback/edit/" + feedbackId,
-    });
-
-    return data.data.data;
-  } catch (error) {
-    console.log(error);
+  & > div {
+    margin-bottom: 6.8rem;
   }
-};
+
+  article {
+    padding: 5.2rem 4.2rem 4rem;
+    background-color: var(--white);
+    position: relative;
+  }
+
+  h1 {
+    font-weight: 700;
+    font-size: 2.4rem;
+    letter-spacing: -0.3px;
+    color: var(--greyish-blue);
+
+    margin-bottom: 4rem;
+  }
+
+  article > img {
+    position: absolute;
+    top: 0;
+    left: 4.2rem;
+    transform: translateY(-50%);
+  }
+`;
+
+const ButtonController = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1.6rem;
+`;
 
 function EditFeedback() {
   const submit = useSubmit();
+  const fetcher = useFetcher();
   const navigate = useNavigate();
   const feedback = useLoaderData();
-  const navigation = useNavigation();
   // Category Input Field
-  const [category, setCategory] = useDropdown(feedback.category);
+  const [category, setCategory] = useDropdown(feedback?.category);
   // Category Input Field
-  const [status, setStatus] = useDropdown(feedback.status);
+  const [status, setStatus] = useDropdown(feedback?.status);
   // Title Input Field
   const [titleValue, titleError, titleIsTouched, handleTitleChange] = useInput(
     titleValidator,
-    feedback.title
+    feedback?.title
   );
-  // Detail Input Field
-  const [detailValue, detailError, detailIsTouched, handleDetailChange] =
-    useInput(detailValidator, feedback.detail);
 
-  const handleSubmit = function (event) {
+  const [detailValue, detailError, detailIsTouched, handleDetailChange] =
+    useInput(detailValidator, feedback?.detail);
+
+  const handleSubmit = async function (event) {
     event.preventDefault();
-    console.log(detailError, titleError);
+
     if (detailError || titleError) return;
 
     const modifiedData = {
@@ -67,8 +90,7 @@ function EditFeedback() {
   };
 
   const handleFeedbackDeletion = function () {
-    console.log(feedback.id);
-    submit(null, {
+    fetcher.submit(null, {
       action: "/feedback/delete/" + feedback.id,
       method: "DELETE",
     });
@@ -82,8 +104,7 @@ function EditFeedback() {
 
       <article>
         <img src="../../assets/shared/icon-edit-feedback.svg" />
-        <h1>Editing &lsquo;{feedback.title}&rsquo;</h1>
-
+        <h1>Editing &lsquo;{feedback?.title}&rsquo;</h1>
         <form onSubmit={handleSubmit}>
           <Input
             type="text"
@@ -126,30 +147,20 @@ function EditFeedback() {
               hover="#E98888"
               definedClass="mr-auto"
               onHandleClick={handleFeedbackDeletion}
+              type="button"
             >
-              {navigation.state !== "idle" ? (
-                <Spinner hasParent={true} />
-              ) : (
-                "delete"
-              )}
+              delete
             </Button>
             <Button
               bg="dark-greyish-blue"
               hover="#656EA3"
               onHandleClick={() => navigate("/")}
+              type="button"
             >
-              {navigation.state !== "idle" ? (
-                <Spinner hasParent={true} />
-              ) : (
-                "cancel"
-              )}
+              cancel
             </Button>
             <Button bg="violet" hover="#C75AF6" type="submit">
-              {navigation.state !== "idle" ? (
-                <Spinner hasParent={true} />
-              ) : (
-                "edit feedback"
-              )}
+              edit feedback
             </Button>
           </ButtonController>
         </form>
@@ -159,3 +170,17 @@ function EditFeedback() {
 }
 
 export default EditFeedback;
+
+export const loader = async function (props) {
+  const { feedbackId } = props.params;
+
+  try {
+    const response = await axiosPrivate({
+      url: "/feedback/edit/" + feedbackId,
+    });
+
+    return response.data.data;
+  } catch (error) {
+    throw json(error);
+  }
+};

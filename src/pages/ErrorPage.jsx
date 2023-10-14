@@ -3,14 +3,17 @@ import { useRouteError, Link } from "react-router-dom";
 function ErrorPage() {
   const error = useRouteError();
 
-  console.log("Error Page");
+  const errorStatus = error?.status || 500;
+  const errorMessage =
+    error?.data?.error ||
+    error?.statusText ||
+    error?.data?.message ||
+    "Something went wrong on the server";
 
   return (
     <div>
-      <h1>
-        Ooops! {error?.data?.message || "Something went wrong on the server"}
-      </h1>
-      <p>The following error code was thrown: {error?.status || 500}</p>
+      <h1>Ooops! {errorMessage}</h1>
+      <p>The following error code was thrown: {errorStatus}</p>
       <Link to="/">Continue browsing</Link>
     </div>
   );

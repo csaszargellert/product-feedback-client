@@ -1,10 +1,9 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 function useInput(validator, defaultValue) {
   const [value, setValue] = useState(defaultValue || "");
   const [error, setError] = useState("");
   const [isTouched, setIsTouched] = useState(false);
-
   const handleInputChange = useCallback(
     function (event) {
       const inputValue = event.target.value;
@@ -24,7 +23,21 @@ function useInput(validator, defaultValue) {
     [validator]
   );
 
-  return [value, error, isTouched, handleInputChange, setError, setIsTouched];
+  useEffect(() => {
+    if (defaultValue) {
+      setValue(defaultValue);
+    }
+  }, [defaultValue]);
+
+  return [
+    value,
+    error,
+    isTouched,
+    handleInputChange,
+    setError,
+    setIsTouched,
+    setValue,
+  ];
 }
 
 export default useInput;

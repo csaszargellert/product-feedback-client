@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useRouteLoaderData } from "react-router-dom";
 import Button, { BackButton } from "./Button";
 
 const Header = styled.header`
@@ -8,13 +8,18 @@ const Header = styled.header`
   justify-content: space-between;
 `;
 
-function CommentHeader({ id }) {
+function CommentHeader({ id, creator }) {
+  const { userId } = useRouteLoaderData("root");
+  const isCurrentUserMadeFeedback = creator === userId;
+
   return (
     <Header>
       <BackButton />
-      <Button as={Link} to={`/feedback/edit/${id}`} bg="blue" hover="#7C91F9">
-        edit feedback
-      </Button>
+      {isCurrentUserMadeFeedback && (
+        <Button as={Link} to={`/feedback/edit/${id}`} bg="blue" hover="#7C91F9">
+          edit feedback
+        </Button>
+      )}
     </Header>
   );
 }

@@ -1,6 +1,6 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useContext } from "react";
 
-export const FeedbackContext = createContext();
+const FeedbackContext = createContext();
 
 const FeedbackContextProvider = function ({ children }) {
   const [feedbacks, setFeedbacks] = useState(null);
@@ -21,3 +21,7 @@ const FeedbackContextProvider = function ({ children }) {
 };
 
 export default FeedbackContextProvider;
+
+export const useFeedbackContext = function () {
+  return useContext(FeedbackContext);
+};

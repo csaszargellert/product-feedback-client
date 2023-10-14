@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
 const ErrorContainer = styled.section`
   position: absolute;
@@ -22,28 +22,6 @@ const Error = styled.p`
   cursor: pointer;
 `;
 
-// const ConfirmationModal = styled.div`
-
-// `;
-
-// const Overlay = styled.div`
-//   position: absolute;
-//   width: 100%;
-//   height: 100vh;
-//   top: 0;
-//   left: 0;
-
-//   background-color: rgba(0,0,0,.5);
-// `;
-
-// export const onDeletionConfirmation = function() {
-
-//   return createPortal(
-//     <ConfirmationModal><Overlay /></ConfirmationModal>,
-//     document.getElementById("error")
-//   );
-// }
-
 function ErrorElement({ children }) {
   const [showError, setShowError] = useState(true);
 
@@ -61,7 +39,6 @@ function ErrorElement({ children }) {
 }
 
 function ErrorModal({ errorList }) {
-  console.log(errorList);
   return createPortal(
     <ErrorContainer>
       {errorList &&

@@ -15,6 +15,8 @@ export const detailValidator = function (value) {
 
   if (!value) {
     error = "Can't be empty";
+  } else if (value.length > 250) {
+    error = "Can't be more than 250 characters";
   } else {
     error = "";
   }

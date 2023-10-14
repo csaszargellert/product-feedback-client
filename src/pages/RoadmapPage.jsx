@@ -1,7 +1,8 @@
 import styled from "styled-components";
-import { useContext } from "react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { FeedbackContext } from "../context/feedbackContext";
+import { useFeedbackContext } from "../context/feedbackContext";
 import RoadmapHeader from "../components/RoadmapHeader";
 import RoadmapMain from "../components/RoadmapMain";
 
@@ -10,12 +11,19 @@ const Content = styled.div`
 `;
 
 function RoadmapPage() {
-  const { feedbacks, statuses } = useContext(FeedbackContext);
+  const { feedbacks, statuses } = useFeedbackContext();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!feedbacks || !statuses) {
+      navigate("/");
+    }
+  }, [feedbacks, statuses]);
 
   return (
     <Content>
       <RoadmapHeader />
-      <RoadmapMain feedbacks={feedbacks} statuses={statuses} />
+      <RoadmapMain feedbacks={feedbacks || []} statuses={statuses || []} />
     </Content>
   );
 }

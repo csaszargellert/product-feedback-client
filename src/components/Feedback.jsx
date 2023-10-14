@@ -16,10 +16,20 @@ const FeedbackEl = styled.div`
   gap: 4rem;
 `;
 
-function Feedback({ title, detail, category, id, titleAs }) {
+function Feedback({
+  title,
+  detail,
+  category,
+  id,
+  titleAs,
+  upvotesNumber,
+  commentsNumber,
+}) {
   return (
     <FeedbackEl>
-      <Upvotes definedClass="self-start">112</Upvotes>
+      <Upvotes definedClass="self-start" feedbackId={id}>
+        {upvotesNumber}
+      </Upvotes>
       <Details
         title={title}
         detail={detail}
@@ -27,7 +37,7 @@ function Feedback({ title, detail, category, id, titleAs }) {
         id={id}
         as={titleAs}
       />
-      <CommentSummary definedClass="ml-auto">2</CommentSummary>
+      <CommentSummary definedClass="ml-auto">{commentsNumber}</CommentSummary>
     </FeedbackEl>
   );
 }

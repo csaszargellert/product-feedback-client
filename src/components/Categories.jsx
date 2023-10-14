@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 import { CATEGORIES } from "../constants/dropdown";
 import { CategoryButton } from "./Button";
@@ -18,13 +18,11 @@ const CategoryController = styled.form`
 
 function Categories({ query }) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
 
   const handleSubmit = function (event) {
     event.preventDefault();
     const searchValue = event.nativeEvent.submitter.textContent.trim() || "All";
 
-    navigate("/");
     searchParams.set("category", searchValue);
     setSearchParams(searchParams);
   };

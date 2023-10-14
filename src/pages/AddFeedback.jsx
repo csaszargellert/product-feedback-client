@@ -1,7 +1,7 @@
-import { useSubmit, useNavigate, useNavigation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useSubmit } from "react-router-dom";
 
-import useRefreshToken from "../custom-hooks/useRefreshToken";
 import { titleValidator, detailValidator } from "../constants/validator";
 import { CATEGORIES } from "../constants/dropdown";
 import useInput from "../custom-hooks/useInput";
@@ -10,10 +10,8 @@ import useDropdown from "../custom-hooks/useDropdown";
 import Dropdown from "../components/Dropdown";
 import Input from "../components/Input";
 import Button, { BackButton } from "../components/Button";
-import ErrorModal from "../components/ErrorModal";
-import Spinner from "../components/Spinner";
 
-export const Section = styled.section`
+const Section = styled.section`
   padding: 9.6rem 0;
   max-width: 54rem;
   margin: 0 auto;
@@ -45,7 +43,7 @@ export const Section = styled.section`
   }
 `;
 
-export const ButtonController = styled.div`
+const ButtonController = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -53,10 +51,8 @@ export const ButtonController = styled.div`
 `;
 
 function AddFeedback() {
-  const refresh = useRefreshToken();
-  const submit = useSubmit();
   const navigate = useNavigate();
-  const navigation = useNavigation();
+  const submit = useSubmit();
   // Category Input Field
   const [category, setCategory] = useDropdown(CATEGORIES[0].category);
   // Title Input Field
@@ -78,7 +74,7 @@ function AddFeedback() {
     setDetailIsTouched,
   ] = useInput(detailValidator);
 
-  const handleSubmit = function (event) {
+  const handleSubmit = async function (event) {
     event.preventDefault();
     let hasError = false;
     if (!titleValue && !titleIsTouched) {
@@ -115,7 +111,7 @@ function AddFeedback() {
         <img src="../../assets/shared/icon-new-feedback.svg" />
         <h1>Create New Feedback</h1>
 
-        <form onSubmit={handleSubmit} method="post">
+        <form onSubmit={handleSubmit}>
           <Input
             type="text"
             id="title"
@@ -152,24 +148,14 @@ function AddFeedback() {
               hover="#656EA3"
               onHandleClick={() => navigate("/")}
             >
-              {navigation.state !== "idle" ? (
-                <Spinner hasParent={true} />
-              ) : (
-                "cancel"
-              )}
+              cancel
             </Button>
             <Button bg="violet" hover="#C75AF6" type="submit">
-              {navigation.state !== "idle" ? (
-                <Spinner hasParent={true} />
-              ) : (
-                "add feedback"
-              )}
+              add feedback
             </Button>
           </ButtonController>
         </form>
       </article>
-
-      <button onClick={() => refresh()}>refresh</button>
     </Section>
   );
 }

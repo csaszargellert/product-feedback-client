@@ -10,15 +10,24 @@ const LoadingSpinner = styled.div`
   width: 4rem;
   height: 4rem;
   border-radius: 50%;
-  border: 5px solid
-    ${(props) => (props.$hasParent ? "var(--white)" : "var(--violet)")};
+  border: 5px solid var(--violet);
   border-left-color: transparent;
 
   animation: ${rotate} 1000ms linear infinite;
 `;
 
-function Spinner({ hasParent }) {
-  return <LoadingSpinner $hasParent={hasParent}></LoadingSpinner>;
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 9.6rem 0 0;
+`;
+
+function Spinner() {
+  return (
+    <Container>
+      <LoadingSpinner></LoadingSpinner>
+    </Container>
+  );
 }
 
 export default Spinner;
